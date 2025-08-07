@@ -6,7 +6,12 @@ use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\GoogleController;
 use Illuminate\Types\Relations\Role;
+
 use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
@@ -47,5 +52,17 @@ Route::delete('/clases/{id}', [ClaseController::class, 'destroy'])->name('clases
 
 
 Route::get('/ver-logs', [LogViewerController::class, 'verLogs'])->middleware('auth');
+
+Route::get('password/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+Route::get('/auth/redirect/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/callback/google', [GoogleController::class, 'handleGoogleCallback']);
+
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::get('/home', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');
 

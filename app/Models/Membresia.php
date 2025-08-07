@@ -8,7 +8,7 @@ class Membresia extends Model
 {
 
     protected $table = 'memberships';
-    
+
     protected $fillable = [
         'id_usuario',         
         'clases_adquiridas',   
