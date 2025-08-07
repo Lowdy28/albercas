@@ -9,8 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-
+use App\Http\Controllers\GoogleController;
 use Illuminate\Types\Relations\Role;
+
+
+
+
+
 
 use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\HomeController;
@@ -61,3 +66,8 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
+Route::get('/auth/redirect/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/callback/google', [GoogleController::class, 'handleGoogleCallback']);
+
+Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
