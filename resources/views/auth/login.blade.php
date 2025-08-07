@@ -83,6 +83,22 @@
             transform: scale(1.03);
         }
 
+        .btn-google {
+            background-color: #db4437;
+            border: none;
+            width: 100%;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 0 12px #db4437;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-google:hover {
+            background-color: #c23321;
+            box-shadow: 0 0 20px #c23321;
+            transform: scale(1.03);
+        }
+
         .form-text a {
             color: #90caf9;
             text-decoration: none;
@@ -98,6 +114,31 @@
             display: block;
             color: #ff6b6b;
             font-weight: 600;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #ccc;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: #999;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
         }
     </style>
 </head>
@@ -131,7 +172,13 @@
                 <label class="form-check-label" for="remember">Recordarme</label>
             </div>
 
-            <button type="submit" class="btn btn-primary mb-2">Ingresar</button>
+            <button type="submit" class="btn btn-primary mb-3">Ingresar</button>
+
+            <div class="divider">O</div>
+
+            <a href="{{ route('google.login') }}" class="btn btn-google mb-3">
+                <i class="bi bi-google"></i> Iniciar sesión con Google
+            </a>
 
             <div class="form-text text-center mt-2">
                 <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
