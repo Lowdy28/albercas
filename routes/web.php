@@ -6,11 +6,11 @@ use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Types\Relations\Role;
-
 use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -46,8 +46,6 @@ Route::get('/clases/{id}/edit', [ClaseController::class, 'edit'])->name('clases.
 Route::delete('/clases/{id}', [ClaseController::class, 'destroy'])->name('clases.destroy')->middleware(['auth', 'rol:Profesor']);
 
 
-
-Route::get('/privacidad', [HomeController::class, 'privacidad'])->name('privacidad');
-
-
 Route::get('/ver-logs', [LogViewerController::class, 'verLogs'])->middleware('auth');
+Route::get('/home', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');
+

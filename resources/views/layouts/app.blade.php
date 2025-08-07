@@ -1,75 +1,155 @@
 @extends('adminlte::page')
 
-{{-- Extend and customize the browser title --}}
-
-@section('title')
-    {{ config('adminlte.title') }}
-    @hasSection('subtitle') | @yield('subtitle') @endif
-@stop
-
-{{-- Extend and customize the page content header --}}
+@section('title', 'Inicio')
 
 @section('content_header')
-    @hasSection('content_header_title')
-        <h1 class="text-muted">
-            @yield('content_header_title')
-
-            @hasSection('content_header_subtitle')
-                <small class="text-dark">
-                    <i class="fas fa-xs fa-angle-right text-muted"></i>
-                    @yield('content_header_subtitle')
-                </small>
-            @endif
-        </h1>
-    @endif
+    <h1>Panel de Control</h1>
 @stop
-
-{{-- Rename section content to content_body --}}
 
 @section('content')
-    @yield('content_body')
+    @can('admin')
+        {{-- DASHBOARD PARA ADMIN --}}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ $totalUsuarios }}</h3>
+                        <p>Total de Usuarios</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ $totalClases }}</h3>
+                        <p>Total de Clases</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>${{ $totalPagos }}</h3>
+                        <p>Total Pagado</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">Resumen Mensual</div>
+            <div class="card-body">
+                <canvas id="graficaAdmin"></canvas>
+            </div>
+        </div>
+    @endcan
+
+    @can('profesor')
+        {{-- DASHBOARD PARA PROFESOR --}}
+        <div class="card">
+            <div class="card-header">Tus Clases Asignadas</div>
+            <div class="card-body">
+                <p>Total de clases asignadas: <strong>{{ $totalClasesProfesor }}</strong></p>
+                <canvas id="graficaClasesProfe"></canvas>
+            </div>
+        </div>
+    @endcan
+
+    @can('usuario')
+        {{-- DASHBOARD PARA CLIENTE --}}
+        <div class="card">
+            <div class="card-header">Resumen de Membresía</div>
+            <div class="card-body">
+                <p><strong>Clases disponibles:</strong> {{ $membresia->clases_disponibles }}</p>
+                <p><strong>Clases ocupadas:</strong> {{ $membresia->clases_ocupadas }}</p>
+                <canvas id="graficaCliente"></canvas>
+            </div>
+        </div>
+    @endcan
 @stop
-
-{{-- Create a common footer --}}
-
-@section('footer')
-    <div class="float-right">
-        Version: {{ config('app.version', '1.0.0') }}
-    </div>
-
-    <strong>
-        <a href="{{ config('app.company_url', '#') }}">
-            {{ config('app.company_name', 'My company') }}
-        </a>
-    </strong>
-@stop
-
-{{-- Add common Javascript/Jquery code --}}
 
 @push('js')
-<script>
+    {{-- Chart.js CDN --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    $(document).ready(function() {
-        // Add your common script logic here...
-    });
+    @can('admin')
+    <script>
+        const ctxAdmin = document.getElementById('graficaAdmin').getContext('2d');
+        new Chart(ctxAdmin, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($meses) !!},
+                datasets: [{
+                    label: 'Pagos ($)',
+                    data: {!! json_encode($pagosPorMes) !!},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+    @endcan
 
-</script>
-@endpush
+    @can('profesor')
+    <script>
+        const ctxProfe = document.getElementById('graficaClasesProfe').getContext('2d');
+        new Chart(ctxProfe, {
+            type: 'bar',
+            data: {
+                labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
+                datasets: [{
+                    label: 'Clases asignadas',
+                    data: [2, 4, 6, 3],
+                    backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+    @endcan
 
-{{-- Add common CSS customizations --}}
-
-@push('css')
-<style type="text/css">
-
-    {{-- You can add AdminLTE customizations here --}}
-    /*
-    .card-header {
-        border-bottom: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-    */
-
-</style>
+    @can('usuario')
+    <script>
+        const ctxCliente = document.getElementById('graficaCliente').getContext('2d');
+        new Chart(ctxCliente, {
+            type: 'doughnut',
+            data: {
+                labels: ['Disponibles', 'Ocupadas'],
+                datasets: [{
+                    data: [{{ $membresia->clases_disponibles }}, {{ $membresia->clases_ocupadas }}],
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+    </script>
+    @endcan
 @endpush

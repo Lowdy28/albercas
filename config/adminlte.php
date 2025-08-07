@@ -308,12 +308,12 @@ return [
         [
             'text' => 'Nueva',
             'route' => 'membresias.nueva',
-            'can' => 'Administrador', // Solo el administrador puede crear membresías
+            'can' => 'Administrador',
         ],
         [
             'text' => 'Lista',
             'route' => 'membresias',
-            'can' => 'Administrador', // Solo el administrador puede ver la lista completa
+            'can' => 'Administrador',
         ],
     ],
 ],
@@ -325,12 +325,12 @@ return [
         [
             'text' => 'Nuevo Usuario',
             'route' => 'usuarios.nuevaU',
-            'can' => 'Administrador', // Solo el administrador puede crear usuarios
+            'can' => 'Administrador',
         ],
         [
             'text' => 'Lista de Usuarios',
             'route' => 'usuarios',
-            'can' => 'Administrador', // Solo el administrador puede ver la lista de usuarios
+            'can' => 'Administrador',
         ],
     ],
 ],
@@ -342,20 +342,15 @@ return [
         [
             'text' => 'Nueva Clase',
             'route' => 'clases.nueva',
-            'can' => 'Profesor', // Solo el profesor puede crear clases
+            'can' => 'Profesor',
         ],
         [
             'text' => 'Lista de Clases',
             'route' => 'clases.lista',
-            'can' => 'Profesor', // Solo el profesor puede ver su lista de clases
+            'can' => 'Profesor',
         ],
     ],
 ],
- [
-        'text' => 'Aviso de Privacidad',
-        'url'  => 'privacidad',
-        'icon' => 'fas fa-user-shield',
-    ],
 
 
     ],

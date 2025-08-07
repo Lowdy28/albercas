@@ -9,7 +9,10 @@
 @section('content')
     <form action="{{ route('usuarios.store') }}" method="post">
         @csrf
-        <input type="hidden" name="id" value="{{ $usuario->id }}">
+        {{-- Enviar id solo si es edición --}}
+        @if(!empty($usuario->id))
+            <input type="hidden" name="id" value="{{ $usuario->id }}">
+        @endif
 
         <div class="form-group">
             <div class="row">
@@ -22,7 +25,6 @@
                     </div>
                 </div>
 
-                <!-- Correo Electrónico -->
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="email">Correo Electrónico</label>
@@ -36,29 +38,24 @@
                     <div class="form-group">
                         <label for="password">Contraseña</label>
                         <input type="password" class="form-control" name="password" id="password"
-                            placeholder="Contraseña">
+                            placeholder="Contraseña" {{ empty($usuario->id) ? 'required' : '' }}>
                     </div>
                 </div>
 
-              <!-- Rol -->
-<div class="col-lg-6">
-    <div class="form-group">
-        <label for="rol">Rol</label>
-        <select name="rol" id="rol" class="form-control select2" required>
-            <option value="">Selecciona un rol</option>
-            <option value="Administrador" {{ $usuario->rol == 'Administrador' ? 'selected' : '' }}>Administrador</option>
-            <option value="Cliente" {{ $usuario->rol == 'Cliente' ? 'selected' : '' }}>Cliente</option>
-            <option value="Profesor" {{ $usuario->rol == 'Profesor' ? 'selected' : '' }}>Profesor</option>
-        </select>
-    </div>
-</div>
-
-
-                <!-- Botón Guardar -->
-                <div class="col-lg-12">
+                <div class="col-lg-6">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-warning">Guardar</button>
+                        <label for="rol">Rol</label>
+                        <select name="rol" id="rol" class="form-control select2" required>
+                            <option value="">Selecciona un rol</option>
+                            <option value="Administrador" {{ (isset($usuario->rol) && $usuario->rol == 'Administrador') ? 'selected' : '' }}>Administrador</option>
+                            <option value="Cliente" {{ (isset($usuario->rol) && $usuario->rol == 'Cliente') ? 'selected' : '' }}>Cliente</option>
+                            <option value="Profesor" {{ (isset($usuario->rol) && $usuario->rol == 'Profesor') ? 'selected' : '' }}>Profesor</option>
+                        </select>
                     </div>
+                </div>
+
+                <div class="col-lg-12 mt-3">
+                    <button type="submit" class="btn btn-warning">Guardar</button>
                 </div>
             </div>
         </div>
