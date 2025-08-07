@@ -11,10 +11,10 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Types\Relations\Role;
-
 use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PerfilController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -66,3 +66,8 @@ Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name(
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::get('/home', [App\Http\Controllers\DashboardController::class, 'index'])->name('home');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil');
+    Route::post('/perfil/editar', [PerfilController::class, 'update'])->name('perfil.update');
+    Route::post('/perfil/password', [PerfilController::class, 'cambiarPassword'])->name('perfil.password');
+});

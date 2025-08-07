@@ -334,7 +334,12 @@ return [
         ],
     ],
 ],
-
+[
+    'text' => 'Mi Perfil',
+    'icon' => 'fas fa-user-cog',
+    'route' => 'perfil',
+    'can' => 'Profesor',
+],
 [
     'text' => 'Clases',
     'icon' => 'fas fa-fw fa-share',
@@ -351,6 +356,7 @@ return [
         ],
     ],
 ],
+
 
 
     ],
