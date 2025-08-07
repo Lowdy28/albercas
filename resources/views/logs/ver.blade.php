@@ -26,7 +26,7 @@
         font-weight: 800;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         text-align: center;
-        background: rgba(2, 136, 209, 0.4); /* más transparencia */
+        background: rgba(2, 136, 209, 0.4);
         border-radius: 8px;
         padding: 15px;
         max-width: 600px;
@@ -38,7 +38,7 @@
         position: relative;
         max-width: 900px;
         margin: 20px auto 0 auto;
-        background-color: rgba(255, 255, 255, 0.5); /* menos opaco, más transparente */
+        background-color: rgba(255, 255, 255, 0.5);
         border-radius: 15px;
         padding: 30px 35px;
         max-height: 80vh;
@@ -56,7 +56,7 @@
         font-size: 15px;
         color: #01579b;
         font-weight: 600;
-        background-color: rgba(178, 235, 242, 0.3); /* menos opaco */
+        background-color: rgba(178, 235, 242, 0.3);
         box-shadow: inset 0 0 8px rgba(129, 212, 250, 0.2);
         transition: background-color 0.3s ease;
         word-break: break-word;
@@ -80,7 +80,6 @@
         border-left: 6px solid #0288d1;
     }
 
-    /* Scrollbar personalizado */
     ::-webkit-scrollbar {
         width: 12px;
     }
@@ -94,7 +93,6 @@
         border: 3px solid rgba(224, 247, 250, 0.3);
     }
 
-    /* Fondo de olas sutil */
     .log-container::before {
         content: '';
         position: absolute;
@@ -102,7 +100,7 @@
         width: 100%; height: 100%;
         background: url('https://images.unsplash.com/photo-1519606247868-4d47b58d80a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
         background-size: cover;
-        opacity: 0.02; /* menos opaco */
+        opacity: 0.02;
         border-radius: 15px;
         pointer-events: none;
         z-index: 0;
@@ -121,8 +119,12 @@
 <div class="log-container">
     @foreach(explode("\n", $logs) as $linea)
         @php
+            $linea = trim($linea);
+            if ($linea === '') continue;
+
             $clase = 'info';
             $texto = strtolower($linea);
+
             if (str_contains($texto, 'warning')) $clase = 'warning';
             elseif (str_contains($texto, 'error') || str_contains($texto, 'exception')) $clase = 'error';
         @endphp

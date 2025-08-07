@@ -122,15 +122,6 @@ return [
             'driver' => 'monolog',
             'handler' => NullHandler::class,
         ],
-
-        // Aquí agregamos el canal personalizado para usuarios
-        'usuarios' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/usuarios.log'),
-            'level' => 'info',
-            'replace_placeholders' => true,
-        ],
-
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
@@ -138,3 +129,4 @@ return [
     ],
 
 ];
+    

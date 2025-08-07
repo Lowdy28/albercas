@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class UsuariosController extends Controller
+class UsuarioController extends Controller
 {
     /**
      * Muestra la lista de todos los usuarios.
@@ -15,7 +15,7 @@ class UsuariosController extends Controller
     public function list()
     {
         $usuarios = User::all();
-        return view('usuarios.lista', compact('usuarios'));
+        return view('usuarios.listaU', compact('usuarios'));
     }
 
     /**
@@ -25,7 +25,7 @@ class UsuariosController extends Controller
     {
         $usuario = new User();
         $roles = ['usuario', 'profesor', 'admin'];
-        return view('usuarios.nuevo', compact('usuario', 'roles'));
+        return view('usuarios.nuevaU', compact('usuario', 'roles'));
     }
 
     /**
@@ -40,26 +40,23 @@ class UsuariosController extends Controller
             'rol'      => 'required|in:usuario,profesor,admin',
         ]);
 
-        $nuevo = User::create([
+        $nuevoUsuario = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => bcrypt($request->password),
             'rol'      => $request->rol,
         ]);
 
-        Log::channel('usuarios')->info('Usuario creado', [
+        Log::info('Usuario creado', [
             'por_usuario'     => $this->userLogInfo(),
-            'nuevo_usuario'   => $nuevo->only('id', 'name', 'email', 'rol')
+            'nuevo_usuario'   => $nuevoUsuario->only('id', 'name', 'email', 'rol')
         ]);
 
-        // Devolvemos el formulario vacío otra vez
-        $usuario = new User();
-        $roles = ['usuario', 'profesor', 'admin'];
-        return view('usuarios.nuevo', compact('usuario', 'roles'));
+        return redirect()->route('usuarios');
     }
 
     /**
-     * Guarda un usuario, ya sea nuevo o existente (update).
+     * Guarda un usuario, ya sea nuevo o existente.
      */
     public function store(Request $request)
     {
@@ -71,7 +68,7 @@ class UsuariosController extends Controller
         ]);
 
         if ($request->id > 0) {
-            $usuario = User::find($request->id);
+            $usuario = User::findOrFail($request->id);
             $accion = 'actualizado';
         } else {
             $usuario = new User();
@@ -88,7 +85,7 @@ class UsuariosController extends Controller
         $usuario->rol = $request->rol;
         $usuario->save();
 
-        Log::channel('usuarios')->info("Usuario {$accion}", [
+        Log::info("Usuario {$accion}", [
             'por_usuario'       => $this->userLogInfo(),
             'usuario_objetivo'  => $usuario->only('id', 'name', 'email', 'rol')
         ]);
@@ -103,7 +100,7 @@ class UsuariosController extends Controller
     {
         $usuario = User::findOrFail($id);
         $roles = ['usuario', 'profesor', 'admin'];
-        return view('usuarios.nuevo', compact('usuario', 'roles'));
+        return view('usuarios.nuevaU', compact('usuario', 'roles'));
     }
 
     /**
@@ -111,14 +108,13 @@ class UsuariosController extends Controller
      */
     public function destroy($id)
     {
-        $auhtUser = Auth::user();
         $usuario = User::findOrFail($id);
-        $usuarioInfo = $usuario->only('id', 'name', 'email', 'rol');
+        $info = $usuario->only('id', 'name', 'email', 'rol');
         $usuario->delete();
 
-        Log::channel('usuarios')->warning('Usuario eliminado', [
-            'por_usuario'       => $auhtUser,
-            'usuario_eliminado' => $usuario
+        Log::warning('Usuario eliminado', [
+            'por_usuario'       => $this->userLogInfo(),
+            'usuario_eliminado' => $info
         ]);
 
         return redirect()->route('usuarios');
@@ -129,12 +125,12 @@ class UsuariosController extends Controller
      */
     private function userLogInfo()
     {
-        if (auth()->check()) {
+        if (Auth::check()) {
             return [
-                'id'    => auth()->id(),
-                'name'  => auth()->user()->name,
-                'rol'   => auth()->user()->rol,
-                'email' => auth()->user()->email
+                'id'    => Auth::id(),
+                'name'  => Auth::user()->name,
+                'rol'   => Auth::user()->rol,
+                'email' => Auth::user()->email
             ];
         }
 
