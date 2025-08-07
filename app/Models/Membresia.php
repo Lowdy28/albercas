@@ -9,7 +9,7 @@ class Membresia extends Model  // Hereda de Eloquent para usar funcionalidades O
 {
    //  Nombre de la tabla real en la base de datos
     protected $table = 'memberships';
-    
+
     // 6️⃣ Campos que se pueden llenar de forma masiva
     protected $fillable = [
         'id_usuario',           // ID del usuario dueño de esta membresía
