@@ -6,6 +6,9 @@ use App\Http\Controllers\ClaseController;
 use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 use Illuminate\Types\Relations\Role;
 
@@ -51,3 +54,10 @@ Route::get('/privacidad', [HomeController::class, 'privacidad'])->name('privacid
 
 
 Route::get('/ver-logs', [LogViewerController::class, 'verLogs'])->middleware('auth');
+
+Route::get('password/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+
